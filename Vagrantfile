@@ -63,7 +63,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # Customize the amount of memory on the VM:
 #      vb.memory = "16384"
       vb.memory = "4096"
-      vb.name = "ubuntu18-profNew"
+      vb.name = "Demo-Profiling-Radar360-KYC"
     end
 
     # View the documentation for the provider you are using for more
