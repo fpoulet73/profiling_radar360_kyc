@@ -62,7 +62,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.gui = false
       # Customize the amount of memory on the VM:
 #      vb.memory = "16384"
-      vb.memory = "4096"
+      vb.memory = "8192"
       vb.name = "Demo-Profiling-Radar360-KYC"
     end
 
