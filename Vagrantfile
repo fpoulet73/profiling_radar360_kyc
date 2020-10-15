@@ -100,7 +100,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		args:" -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data"
       d.pull_images "eastnetsdemo/profiling_radar360_kyc"
       d.run "eastnetsdemo/profiling_radar360_kyc",
-        args:" -v /opt/eastnets:/opt/eastnets -p 1433:1433 -p 8080:8080 -p 8999:8999 -p 9002:9002 -p 8483:8483"
+        args:" -v /opt/eastnets:/opt/eastnets --ulimit nofile=100000:100000 -p 1433:1433 -p 8080:8080 -p 8999:8999 -p 9002:9002 -p 8483:8483"
     end
   end
 
