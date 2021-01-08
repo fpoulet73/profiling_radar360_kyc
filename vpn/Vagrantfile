@@ -72,27 +72,30 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Enable provisioning with a shell script. Additional provisioners such as
     # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
     # documentation for more information about their specific syntax and use.
-    # config.vm.provision "shell", inline: <<-SHELL
-    #   apt-get update
-    #   apt-get install -y apache2
-    # SHELL
+    #ubuntu18.vm.provision "shell", inline: <<-SHELL    
+	#	echo 'DOCKER_OPTS="--insecure-registry 192.168.253.240:8084 ${DOCKER_OPTS}"' >> /etc/default/docker
+    #SHELL
     #
     # As Offical way dosn't work
     # login to docker
-    ubuntu18.vm.provision "docker" do |d|	 
-	  d.post_install_provision "shell", inline:<<-SHELL
-	    	docker kill portainer
-		docker rm portainer
-		docker kill eastnetsdemo-profiling_radar360_kyc
-		docker rm eastnetsdemo-profiling_radar360_kyc
-		docker login -u 'anonymous' -p 'anonymous'
+    
+	
+	
+	ubuntu18.vm.provision "docker" do |d|	 
+	d.post_install_provision "shell", inline:<<-SHELL
 	  SHELL
       d.run "portainer/portainer",
 		args:" -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data"
-      d.pull_images "192.168.253.240:8084/profiling_radar360_kyc"
-      d.run "eastnetsdemo/profiling_radar360_kyc",
-        args:" -v /opt/eastnets:/opt/eastnets --ulimit nofile=50000:50000 -p 1433:1433 -p 8080:8080 -p 8999:8999 -p 9002:9002 -p 8483:8483"
     end
+	
+    ubuntu18.vm.provision "shell", inline: <<-SHELL    
+		systemctl stop docker
+	    echo '{"debug"  : true,"insecure-registries" : [ "192.168.253.240:8084" ]}' > /etc/docker/daemon.json    
+		systemctl start docker
+		docker login 192.168.253.240:8084 -u 'anonymous' -p 'anonymous'
+		docker run -v /opt/eastnets:/opt/eastnets --ulimit nofile=50000:50000 -p 1433:1433 -p 8080:8080 -p 8483:8483 -p 8999:8999 -d 192.168.253.240:8084/profiling_radar360_kyc:latest
+    SHELL
+
   end
 
 end
